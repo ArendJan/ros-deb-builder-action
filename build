@@ -101,6 +101,7 @@ test -n "$DEB_ARCH" && set -- --arch="$DEB_ARCH" "$@"
 
 for PKG_PATH in $(catkin_topological_order --only-folders || colcon list --topological-order --paths-only); do
   echo "::group::Building $COUNT/$TOTAL: $PKG_PATH"
+  source /opt/ros/"$ROS_DISTRO"/setup.bash
   (
   cd "$PKG_PATH"
   ROS_PACKAGE="$(catkin_topological_order --only-names || colcon list --topological-order --names-only)"
