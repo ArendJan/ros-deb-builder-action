@@ -39,7 +39,7 @@ shift "$((OPTIND - 1))"
 test -z "$CONTINUE_PACKAGE_GENERATION" && rm -rf apt_repo
 mkdir -p apt_repo
 APT_REPO="$(pwd)/apt_repo"
-
+APT_REPO="$(pwd)"
 if [ -z "$DISTRIBUTION" ]; then
   if debian-distro-info --all | grep -q "$DEB_DISTRO"; then
     DISTRIBUTION=debian
