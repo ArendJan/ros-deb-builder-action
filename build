@@ -97,7 +97,7 @@ DONE=false
 # while not done
 TRIES=0
 
-while ! [[ "$DONE" ]]; do
+until $DONE; do
 TRIES=$((TRIES+1))
 TOTAL="$( (catkin_topological_order --only-names || colcon list --topological-order --names-only) | wc -l)"
 COUNT=1
