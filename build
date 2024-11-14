@@ -9,7 +9,7 @@ show_build_error() {
   echo "Error building package $PKG_PATH"
   # github workflow error output
   echo "::error file=$PKG_PATH::Error building package $PKG_PATH"
-  return ! $CONTINUE_ON_ERROR
+  return !$CONTINUE_ON_ERROR
 }
 
 while getopts a:cd:hr: OPTCHAR; do
