@@ -110,6 +110,13 @@ runs:
             mv "$file" "$new_file"
           fi
         done
+        # remove _ from start and end of filenames
+        for file in apt_repo/*; do
+          new_file=$(echo "$file" | sed 's/^_//;s/_$//')
+          if [ "$file" != "$new_file" ]; then
+            mv "$file" "$new_file"
+          fi
+        done
 
       shell: bash
     - name: Upload artifacts
