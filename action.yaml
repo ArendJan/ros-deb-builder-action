@@ -102,6 +102,7 @@ runs:
         GIT_LFS: ${{ inputs.GIT_LFS == 'true' && 'true' || '' }}
         SKIP_PUSH: ${{ inputs.SKIP_PUSH }}
     - run: ls
+      shell: bash
     - name: Upload artifacts
       if: ${{ inputs.UPLOAD_ARTIFACTS == 'true' }}
       uses: actions/upload-artifact@v4
