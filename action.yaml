@@ -104,6 +104,8 @@ runs:
     - run: ls
     - name: Upload artifacts
       if: ${{ inputs.UPLOAD_ARTIFACTS == 'true' }}
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
-        name: apt_repo
+        path: apt_repo
+        name: build-${{ inputs.DEB_DISTRO }}-${{ inputs.DEB_ARCH }}-${{ inputs.ROS_DISTRO }}
+        
