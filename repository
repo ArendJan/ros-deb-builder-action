@@ -40,7 +40,9 @@ cd apt_repo
 
 apt-ftparchive packages . > Packages
 apt-ftparchive release . > Release
-
+if $SKIP_PUSH; then
+  exit
+fi
 # Github size limit
 test -n "$GITHUB_TOKEN" && find . -type f -size +100M -delete
 

@@ -55,6 +55,10 @@ inputs:
     description: Continue with next package on build error.
     required: false
     default: false
+  UPLOAD_ARTIFACTS:
+    description: Upload the generated packages as artifacts.
+    required: false
+    default: false
 runs:
   using: composite
   steps:
@@ -88,7 +92,6 @@ runs:
     - name: Create apt repository and deploy it
       run: $GITHUB_ACTION_PATH/repository
       shell: sh
-      if : ${{ inputs.SKIP_PUSH == 'false' }}
       env:
         ROS_DISTRO: ${{ inputs.ROS_DISTRO }}
         DEB_DISTRO: ${{ inputs.DEB_DISTRO }}
@@ -97,3 +100,10 @@ runs:
         SQUASH_HISTORY: ${{ inputs.SQUASH_HISTORY == 'true' && 'true' || '' }}
         PACKAGES_BRANCH: ${{ inputs.PACKAGES_BRANCH }}
         GIT_LFS: ${{ inputs.GIT_LFS == 'true' && 'true' || '' }}
+        SKIP_PUSH: ${{ inputs.SKIP_PUSH }}
+    - run: ls
+    - name: Upload artifacts
+      if: ${{ inputs.UPLOAD_ARTIFACTS == 'true' }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: apt_repo
