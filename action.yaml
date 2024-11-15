@@ -101,7 +101,16 @@ runs:
         PACKAGES_BRANCH: ${{ inputs.PACKAGES_BRANCH }}
         GIT_LFS: ${{ inputs.GIT_LFS == 'true' && 'true' || '' }}
         SKIP_PUSH: ${{ inputs.SKIP_PUSH }}
-    - run: ls
+    - run: |
+        ls -l apt_repo
+        # rename files with forbidden characters in the filename: :<>|?*"
+        for file in apt_repo/*; do
+          new_file=$(echo "$file" | tr ':<>|?*\r\n" ' '_')
+          if [ "$file" != "$new_file" ]; then
+            mv "$file" "$new_file"
+          fi
+        done
+
       shell: bash
     - name: Upload artifacts
       if: ${{ inputs.UPLOAD_ARTIFACTS == 'true' }}
