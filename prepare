@@ -41,7 +41,7 @@ git clone https://gitlab.mister-muffin.de/josch/mmdebstrap.git
 cd mmdebstrap
 # set path
 export PATH="$PWD:$PATH"
-
+cd ..
 if [ "$DEB_ARCH" != "$(dpkg --print-architecture)" ]; then
   # use qemu to translate architecture
   sudo apt install -y --no-install-recommends qemu-user-static arch-test
