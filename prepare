@@ -32,7 +32,7 @@ echo "Install dependencies"
 
 set -ex
 
-test "$VERSION_CODENAME" = "jammy" && sudo cp "$(dirname "$0")/jammy-sbuild.sources" /etc/apt/sources.list.d/
+# test "$VERSION_CODENAME" = "jammy" && sudo cp "$(dirname "$0")/jammy-sbuild.sources" /etc/apt/sources.list.d/
 test "$VERSION_CODENAME" = "noble" && sudo cp "$(dirname "$0")/noble-ros.sources" /etc/apt/sources.list.d/
 sudo apt update
 
