@@ -37,11 +37,11 @@ test "$VERSION_CODENAME" = "noble" && sudo cp "$(dirname "$0")/noble-ros.sources
 sudo apt update
 
 sudo DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends sbuild distro-info debian-archive-keyring ccache uidmap curl git-lfs
-sudo DEBIAN_FRONTEND=noninteractive apt remove -y sbuild
-git clone https://salsa.debian.org/debian/sbuild.git
-cd sbuild
-export PATH="$PWD/bin:$PATH"
-cd ..
+# sudo DEBIAN_FRONTEND=noninteractive apt remove -y sbuild
+# git clone https://salsa.debian.org/debian/sbuild.git
+# cd sbuild
+# export PATH="$PWD/bin:$PATH"
+# cd ..
 git clone https://gitlab.mister-muffin.de/josch/mmdebstrap.git
 cd mmdebstrap
 # set path
