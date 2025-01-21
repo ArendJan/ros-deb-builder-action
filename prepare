@@ -48,7 +48,7 @@ if [ "$DEB_ARCH" != "$(dpkg --print-architecture)" ]; then
   fi
 fi
 
-sudo mkdir /etc/apt-cacher-ng
+sudo mkdir /etc/apt-cacher-ng || true
 echo 'VfileUseRangeOps: 0' | sudo tee /etc/apt-cacher-ng/zzz_override.conf
 
 # Try different package combinations:
