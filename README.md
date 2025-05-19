@@ -31,6 +31,18 @@ See man sbuild.conf.
 
 Additional rosdep sources.
 
+## `COLCON_DEFAULTS_FILE`
+
+Defaults file for colcon. Can be used to restrict the packages to build.
+Example of a colcon file:
+```yaml
+list:
+  packages-up-to:
+    - package1
+    - package2
+```
+
+
 ## `SKIP_ROS_REPOSITORY`
 
 Don't add packages.ros.org as an apt repository.
@@ -126,3 +138,17 @@ Create a Github personal access token with repo scope and do:
 echo -e "machine raw.githubusercontent.com\nlogin <TOKEN>" | sudo tee /etc/apt/auth.conf.d/github.conf
 
 ```
+
+### How to use a private repo as a rosdep source
+
+Rosdep doesn't support authentication with private repos, so as a workaround you'll have to manually download the `local.yaml` file and reference that file in rosdep sources instead of the github url.
+
+```bash
+# Download the local.yaml file to a path of your choice
+curl -H "Authorization: token <your_PAT_token>" https://raw.githubusercontent.com/<user>/<repo_name>/<branch>/local.yaml | sudo tee /etc/ros/rosdep/mappings-<repo_name>.yaml
+
+# Add the file to rosdep sources instead of the github url
+echo "yaml file:///etc/ros/rosdep/mappings-<repo_name>.yaml <ros_distro>" | sudo tee /etc/ros/rosdep/sources.list.d/1-<repo_name>.list
+```
+
+Now the typical `rosdep update` and `rosdep install` commands should work as expected, but remember to redownload the `local.yaml` when there are changes to the packages.
