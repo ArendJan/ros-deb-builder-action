@@ -32,11 +32,14 @@ echo "Install dependencies"
 
 set -ex
 
-test "$VERSION_CODENAME" = "jammy" && sudo cp "$(dirname "$0")/jammy-sbuild.sources" /etc/apt/sources.list.d/
-test "$VERSION_CODENAME" = "noble" && sudo cp "$(dirname "$0")/noble-ros.sources" /etc/apt/sources.list.d/
+# test "$VERSION_CODENAME" = "jammy" && sudo cp "$(dirname "$0")/jammy-sbuild.sources" /etc/apt/sources.list.d/
+# test "$VERSION_CODENAME" = "noble" && sudo cp "$(dirname "$0")/noble-ros.sources" /etc/apt/sources.list.d/
+sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key  -o /usr/share/keyrings/ros-archive-keyring.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
+
 sudo apt update
 
-sudo DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends sbuild mmdebstrap distro-info debian-archive-keyring ccache uidmap curl git-lfs
+sudo DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends sbuild mmdebstrap schroot distro-info debian-archive-keyring ccache uidmap curl git-lfs
 
 if [ "$DEB_ARCH" != "$(dpkg --print-architecture)" ]; then
   # use qemu to translate architecture
@@ -70,10 +73,12 @@ mmdebstrap --variant=buildd --include=apt,ccache,ca-certificates --arch="$DEB_AR
 ccache --zero-stats --max-size=10.0G
 
 # allow ccache access from sbuild
-chmod a+X "$HOME" "$HOME/.cache"
-chmod -R a+rwX "$HOME/.cache/ccache"
-
-cat << "EOF" > "$HOME/.sbuildrc"
+chmod a+X "$HOME" "$HOME/.cache" || true
+chmod -R a+rwX "$HOME/.cache/ccache" || true
+mkdir -p "$HOME/.config/sbuild"
+chmod a+X "$HOME/.config" || true
+chmod a+rwX "$HOME/.config/sbuild" || true
+cat << "EOF" > "$HOME/.config/sbuild/config.pl"
 $build_environment = { "CCACHE_DIR" => "/build/ccache" };
 $path = "/usr/lib/ccache:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games";
 $build_path = "/build/package/";
@@ -81,7 +86,7 @@ $dsc_dir = "package";
 $unshare_bind_mounts = [ { directory => "$HOME/.cache/ccache", mountpoint => "/build/ccache" } ];
 $verbose = 1;
 EOF
-echo "$SBUILD_CONF" >> "$HOME/.sbuildrc"
+echo "$SBUILD_CONF" >> "$HOME/.config/sbuild/config.pl"
 
 test -z "$REPOS_FILE" -a ! -f sources.repos && exit
 REPOS_FILE="${REPOS_FILE:-sources.repos}"

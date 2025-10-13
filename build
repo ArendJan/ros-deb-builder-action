@@ -98,8 +98,9 @@ for PKG in $(colcon list --topological-order --names-only || catkin_topological_
 done
 echo "yaml file://$APT_REPO/local.yaml $ROS_DISTRO" > "$APT_REPO/1-local.list"
 echo "$ROSDEP_SOURCE" > "$APT_REPO/2-remote.list"
+ROS_HOME="$APT_REPO/ros" ROSDEP_SOURCE_PATH="$APT_REPO:/etc/ros/rosdep/sources.list.d/" sudo rosdep init || true
 
-ROS_HOME="$APT_REPO/ros" ROSDEP_SOURCE_PATH="$APT_REPO:/etc/ros/rosdep/sources.list.d/" rosdep update
+ROS_HOME="$APT_REPO/ros" ROSDEP_SOURCE_PATH="$APT_REPO:/etc/ros/rosdep/sources.list.d/" rosdep update || true
 
 echo "Run sbuild"
 
@@ -114,6 +115,8 @@ test -n "$DEB_ARCH" && set -- --arch="$DEB_ARCH" "$@"
 for PKG_PATH in $(colcon list --topological-order --paths-only || catkin_topological_order --only-folders); do
   echo "::group::Building $COUNT/$TOTAL: $PKG_PATH"
   (
+    # check if path is a real path
+    test -d "$PKG_PATH" || { echo "Skipping $PKG_PATH (not a directory)"; continue; }
   cd "$PKG_PATH"
   ROS_PACKAGE="$(COLCON_DEFAULTS_FILE="" colcon list --topological-order --names-only || catkin_topological_order --only-names)"
   test -f "$PKG_PATH/CATKIN_IGNORE" && echo "$ROS_PACKAGE Skipped (CATKIN_IGNORE)" && exit
