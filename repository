@@ -46,7 +46,7 @@ fi
 # Github size limit
 test -n "$GITHUB_TOKEN" && find . -type f -size +100M -delete
 
-if [ -n "$GITHUB_REPO" && "$GITHUB_REPO" != "" ]; then
+if [ -n "$GITHUB_REPO" ] && [ "$GITHUB_REPO" != "" ]; then
   GITHUB_REPOSITORY="$GITHUB_REPO"
 fi
 REPOSITORY="$(printf "%s" "$GITHUB_REPOSITORY" | tr / _)"
