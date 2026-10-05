@@ -59,6 +59,10 @@ inputs:
     description: Upload the generated packages as artifacts.
     required: false
     default: false
+  GITHUB_REPO:
+    description: The GitHub repository to push the packages to. If not set, the current repository will be used.
+    required: false
+    default: ''
 runs:
   using: composite
   steps:
@@ -101,6 +105,7 @@ runs:
         PACKAGES_BRANCH: ${{ inputs.PACKAGES_BRANCH }}
         GIT_LFS: ${{ inputs.GIT_LFS == 'true' && 'true' || '' }}
         SKIP_PUSH: ${{ inputs.SKIP_PUSH }}
+        GITHUB_REPO: ${{ inputs.GITHUB_REPO }}
     - run: |
         ls -l apt_repo
         # rename files with forbidden characters in the filename: :<>|?*"
